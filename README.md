@@ -115,14 +115,6 @@ pip install html
 pip install bcrypt
 ```
 
-Example `requirements.txt`:
-
-```
-Flask
-python-dotenv
-mysql-connector-python
-```
-
 ---
 
 ## 🙌 Credits
