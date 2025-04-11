@@ -37,7 +37,7 @@ MYSQL_USER=your_mysql_username
 MYSQL_PASSWORD=your_mysql_password
 MYSQL_DB=your_database_name
 
-UPLOAD_PATH=static/uploads
+UPLOAD_PATH= <path to ur upload folder in the main dir>
 ```
 
 ### 3. 🐬 Create Database Tables
@@ -71,13 +71,7 @@ You should see your employee-related tables listed.
 ## 🏁 Run the App
 
 ```bash
-flask run
-```
-
-Or (if using `app.py`):
-
-```bash
-python app.py
+python dev.py
 ```
 
 Then open your browser and navigate to:
@@ -88,28 +82,37 @@ http://127.0.0.1:5000
 
 ---
 
-## 📁 Folder Structure
-
-```
-flask-emp-mngmt/
-├── static/
-│   └── uploads/
-├── templates/
-│   └── ...
-├── createdb.py
-├── app.py
-├── .env
-└── README.md
-```
-
----
 
 ## ✅ Requirements
 
 Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install flask
+```
+
+```bash
+pip install os
+```
+
+```bash
+pip install uuid
+```
+
+```bash
+pip install datetime
+```
+
+```bash
+pip install werkzeug
+```
+
+```bash
+pip install html
+```
+
+```bash
+pip install bcrypt
 ```
 
 Example `requirements.txt`:
@@ -124,7 +127,6 @@ mysql-connector-python
 
 ## 🙌 Credits
 
-- Original PHP version inspiration
 - Flask Documentation
-- Your contributions!
+- Synergy Technology Services!
 
