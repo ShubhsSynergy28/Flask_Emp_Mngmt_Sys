@@ -62,7 +62,7 @@ def get_employee_by_id(employeeid):
     return jsonify(result), 200
 
 @retrieve_validate_employee_data_for_create
-def create_employee(ename, ephone, formatted_birth_date, egender, edescription, hobbies, education):
+def create_employee(ename, ephone, formatted_birth_date, egender, edescription, hobbies, education, password):
    
     # Create the employee
     employee = Employee(
@@ -71,6 +71,7 @@ def create_employee(ename, ephone, formatted_birth_date, egender, edescription, 
         birth_date=formatted_birth_date,
         gender=egender,
         description=edescription,
+        password=password
     )
 
     # Handle file upload

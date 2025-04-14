@@ -1,5 +1,6 @@
 from flask import jsonify,session, request
 import bcrypt
+from connectors.db import db
 
 from models.user_model import *
 
@@ -42,5 +43,33 @@ def login():
 
 def logout():
     # Clear the session
-    session.clear()
+    session.pop('user_id', None)
+    session.pop('email', None)
+    session.pop('username', None)
     return jsonify({"message": "Logout successful"}), 200
+
+def create_user():
+    # Retrieve form data
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')  # Plain-text password from the user
+
+    # Validate input
+    if not username or not email or not password:
+        return jsonify({"error": "Username, email, and password are required"}), 400
+
+    # Check if the email already exists
+    if get_user_by_id(email):
+        return jsonify({"error": "Email already exists"}), 400
+
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    # Create the user
+    user = User(username=username, email=email, password=hashed_password.decode('utf-8'))
+    add_user(user)
+
+    # Commit the transaction
+    db.session.commit()
+
+    return jsonify({"message": "User created successfully", "user": {"username": user.username, "email": user.email}}), 201
