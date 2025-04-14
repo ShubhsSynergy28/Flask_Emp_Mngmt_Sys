@@ -1,8 +1,7 @@
 import os
 from application import app
 from dotenv import load_dotenv
-from handlers.handle_employee import *
-from handlers.handle_user import * 
+from handlers.handler import *
 from tests.test_connection_db import * 
 from utils.set_folder_upload_path import *
 

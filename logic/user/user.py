@@ -1,7 +1,23 @@
-from flask import jsonify, session, request
+from flask import jsonify,session, request
 import bcrypt
-from models.models import User  # Assuming you have a User model defined in your models.py
 
+from models.user_model import *
+
+def get_all_users():
+    users = get_all_user()
+    if not users:
+        return jsonify({"error": "No users found"}), 404
+
+    # Format the response
+    result = []
+    for user in users:
+        result.append({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        })
+
+    return jsonify(result), 200
 
 def login():
     # Retrieve form data
@@ -13,7 +29,7 @@ def login():
         return jsonify({"error": "Email and password are required"}), 400
 
     # Check user credentials in the database
-    user = User.query.filter_by(email=email).first()
+    user = get_user_by_id(email)
 
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         # Store user details in the session
@@ -23,3 +39,8 @@ def login():
         return jsonify({"message": "Login successful", "user": {"username": user.username}}), 200
     else:
         return jsonify({"error": "Invalid email or password"}), 401
+
+def logout():
+    # Clear the session
+    session.clear()
+    return jsonify({"message": "Logout successful"}), 200

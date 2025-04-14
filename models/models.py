@@ -11,6 +11,7 @@ class Employee(db.Model):
     gender = db.Column('Egender', db.String(10), nullable=False)
     description = db.Column('Edescription', db.Text, nullable=False)
     file_path = db.Column('Efile_path', db.String(255), nullable=True)
+    password = db.Column('password', db.String(255), nullable=False)
 
     hobbies = db.relationship('EmployeeHobby', backref='employee', lazy=True)
     educations = db.relationship('EmployeeEducation', backref='employee', lazy=True)
