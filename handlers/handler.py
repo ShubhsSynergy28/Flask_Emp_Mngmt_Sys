@@ -4,7 +4,6 @@ from application import app
 from logic.employee.employee import *
 from logic.user.user import *
 
-# from utils.check_login_status import login_required
 from utils.set_folder_upload_path import *
 from utils.is_admin_or_employee_authorization import admin_or_employee_authorized
 from temp import temp
@@ -108,13 +107,6 @@ def handle_employee_logout():
 def handle_create_user():
     try:
         return create_user()
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-@app.route('/temp', methods=['POST'])
-def temp_hash():
-    try:
-        return temp()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
