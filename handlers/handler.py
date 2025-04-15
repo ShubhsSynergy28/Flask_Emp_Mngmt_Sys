@@ -6,7 +6,6 @@ from logic.user.user import *
 
 from utils.set_folder_upload_path import *
 from utils.is_admin_or_employee_authorization import admin_or_employee_authorized
-from temp import temp
 
 @app.route('/users', methods=['GET'])
 def handle_get_users():
