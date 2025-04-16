@@ -73,3 +73,5 @@ def create_user():
     db.session.commit()
 
     return jsonify({"message": "User created successfully", "user": {"username": user.username, "email": user.email}}), 201
+
+    
