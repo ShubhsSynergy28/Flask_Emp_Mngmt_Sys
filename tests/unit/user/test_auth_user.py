@@ -3,14 +3,11 @@ from unittest.mock import patch, MagicMock
 from flask import Flask, request, session
 from logic.user.user import login
 from logic.user.user import create_user
+from logic.user.user import logout
 import bcrypt
+from tests.fixtures import app
 
 
-@pytest.fixture
-def app():
-    app = Flask(__name__)
-    app.secret_key = 'test_secret'
-    return app
 @pytest.mark.parametrize(('test_email', 'test_password', 'input_password', 'expected_status', 'expected_response'), [
     # Valid email & correct password
     ('user@example.com', 'Securepassword@12', 'Securepassword@12', 200, {"message": "Login successful", "user": {"username": "testuser"}}),
@@ -43,17 +40,6 @@ def test_login_function_direct(mock_get_user_by_id, test_email, test_password, i
         assert response.get_json() == expected_response
 
 
-import pytest
-from flask import Flask, session
-from logic.user.user import logout  # Adjust the import to your structure
-
-
-@pytest.fixture
-def app():
-    app = Flask(__name__)
-    app.secret_key = 'test_secret'
-    return app
-
 
 @pytest.mark.parametrize("session_data", [
     # Case 1: Session has user data
@@ -83,13 +69,6 @@ def test_logout_parametrized(app, session_data):
         assert status_code == 200
         assert response.get_json() == {"message": "Logout successful"}
 
-
-
-@pytest.fixture
-def app():
-    app = Flask(__name__)
-    app.secret_key = 'test_secret'
-    return app
 
 
 @pytest.mark.parametrize("username, email, password, user_exists, expected_status, expected_response", [

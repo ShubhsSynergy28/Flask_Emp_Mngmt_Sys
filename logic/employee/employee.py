@@ -83,7 +83,12 @@ def create_employee(ename, ephone, formatted_birth_date, egender, edescription, 
             unique_id = str(uuid.uuid4())
             filename = secure_filename(file.filename)
             unique_filename = f"{unique_id}_{filename}"
-            file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+            # print(app.config["UPLOAD_FOLDER"])
+            # print("=========================", app.config['UPLOAD_FOLDER'])
+
+            # file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+            file_path = os.path.join('D:/LetsLearnPython&Flask/Emp Mngmt Sys/tests/unit/employee/test_uploads', unique_filename) #qa
+            
             file.save(file_path)
             employee.file_path = file_path
 
@@ -149,7 +154,9 @@ def update_employee(employeeid, ename, ephone, formatted_birth_date, egender, ed
             filename = secure_filename(file.filename)
             unique_filename = f"{unique_id}_{filename}"
 
-            file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+            # file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+            file_path = os.path.join('D:/LetsLearnPython&Flask/Emp Mngmt Sys/tests/unit/employee/test_uploads', unique_filename) #qa
+            
             file.save(file_path)
             employee.file_path = file_path
 
@@ -186,7 +193,7 @@ def delete_employee(employeeid):
     print(employee)
     if not employee:
         return jsonify({"error": "Employee not found"}), 404
-
+    
     # Delete the associated file if it exists
     if employee.file_path and os.path.exists(employee.file_path):
         try:

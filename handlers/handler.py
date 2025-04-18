@@ -1,5 +1,6 @@
 from flask import jsonify,session
 from application import app  
+import traceback
 
 from logic.employee.employee import *
 from logic.user.user import *
@@ -90,6 +91,7 @@ def handle_employee_login():
     try:
         return employee_login()
     except Exception as e:
+        print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
         
 

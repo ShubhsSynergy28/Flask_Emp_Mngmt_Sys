@@ -2,13 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from flask import Flask
 from logic.user.user import get_all_users  # adjust the path based on your structure
-
-
-@pytest.fixture
-def app():
-    app = Flask(__name__)
-    app.secret_key = 'test_secret'
-    return app
+from tests.fixtures import app
 
 
 @pytest.mark.parametrize("mocked_users, expected_status, expected_response", [

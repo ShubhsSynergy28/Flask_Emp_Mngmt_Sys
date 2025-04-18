@@ -2,7 +2,6 @@ import os
 from application import app
 from dotenv import load_dotenv
 from handlers.handler import *
-from tests.test_connection_db import * 
 from utils.set_folder_upload_path import *
 
 # app=create_app()

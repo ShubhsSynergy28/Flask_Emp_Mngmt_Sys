@@ -49,10 +49,10 @@ def logout():
     return jsonify({"message": "Logout successful"}), 200
 
 def create_user():
-    # Retrieve form data
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')  # Plain-text password from the user
+    # Retrieve and clean form data
+    username = request.form.get('username', '').strip()
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '').strip()  # Plain-text password from the user
 
     # Validate input
     if not username or not email or not password:
@@ -61,6 +61,9 @@ def create_user():
     # Check if the email already exists
     if get_user_by_id(email):
         return jsonify({"error": "Email already exists"}), 400
+    
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters long"}), 400
 
     # Hash the password
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -72,6 +75,7 @@ def create_user():
     # Commit the transaction
     db.session.commit()
 
-    return jsonify({"message": "User created successfully", "user": {"username": user.username, "email": user.email}}), 201
-
-    
+    return jsonify({
+        "message": "User created successfully",
+        "user": {"username": user.username, "email": user.email}
+    }), 201

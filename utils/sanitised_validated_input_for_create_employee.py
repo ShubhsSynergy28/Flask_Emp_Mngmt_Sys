@@ -41,6 +41,10 @@ def retrieve_validate_employee_data_for_create(func):
             return jsonify({"error": "Description is required"}), 400
         if not password:
             return jsonify({"error":"Password is required!"}), 400
+        if not hobbies:
+            return jsonify({"error": "Hobbies are required"}), 400
+        if not education:
+            return jsonify({"error": "Education is required"}), 400
 
         # Validate and format the birth_date
         try:

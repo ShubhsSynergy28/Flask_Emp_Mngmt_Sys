@@ -9,7 +9,9 @@ def check_phone(ephone):
     return Employee.query.filter_by(phone_no=ephone).first()
 
 def get_employee(employeeid=None):
+    
     if employeeid:
+        print("This is my emp",Employee.query.get(employeeid))
         return Employee.query.get(employeeid)
 
     else:
