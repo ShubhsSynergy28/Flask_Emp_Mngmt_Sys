@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from logic.employee.employee import get_all_employees, get_employee_by_id
-from tests.fixtures import app  # assumes you have a fixture for your Flask app
+from tests.unit.fixtures import app  # assumes you have a fixture for your Flask app
 
 
 def create_mock_employee(id, name, phone_no, birth_date, gender, description, file_path, hobbies, educations):

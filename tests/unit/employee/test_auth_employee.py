@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from flask import Flask, session, request, jsonify
 from logic.employee.employee import employee_login, employee_logout  # Your actual logic
-from tests.fixtures import app
+from tests.unit.fixtures import app
 # from tests.fixtures import app
 
 

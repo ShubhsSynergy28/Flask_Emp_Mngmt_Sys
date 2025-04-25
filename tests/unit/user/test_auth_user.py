@@ -5,7 +5,7 @@ from logic.user.user import login
 from logic.user.user import create_user
 from logic.user.user import logout
 import bcrypt
-from tests.fixtures import app
+from tests.unit.fixtures import app
 
 
 @pytest.mark.parametrize(('test_email', 'test_password', 'input_password', 'expected_status', 'expected_response'), [

@@ -11,8 +11,7 @@ def check_phone(ephone):
 def get_employee(employeeid=None):
     
     if employeeid:
-        print("This is my emp",Employee.query.get(employeeid))
-        return Employee.query.get(employeeid)
+        return db.session.get(Employee, employeeid)
 
     else:
         return Employee.query.all()

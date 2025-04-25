@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from flask import Flask
 from logic.employee.employee import delete_employee
-from tests.fixtures import app
+from tests.unit.fixtures import app
 
 
 @pytest.fixture

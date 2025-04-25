@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from io import BytesIO
-from tests.fixtures import app  # Ensure this fixture includes the /createEmployee route
+from tests.unit.fixtures import *  # Ensure this fixture includes the /createEmployee route
 
 from logic.employee.employee import create_employee
 # from application import app
@@ -69,6 +69,7 @@ load_dotenv()
         ),
     ],
 )
+
 @patch("logic.employee.employee.allowed_file")
 @patch("logic.employee.employee.db.session.add")
 @patch("logic.employee.employee.db.session.commit")
@@ -95,15 +96,13 @@ def test_create_employee(
     app,
 ):
 
-      # Set up mocks
     mock_allowed_file.return_value = True
     mock_get_hobby.side_effect = lambda name: MagicMock() if hobbies_exist else None
     mock_get_education.side_effect = lambda name: MagicMock() if education_exist else None
 
-    # Set upload folder for testSS
-    # app.config["UPLOAD_FOLDER"] = "/tmp/test_uploads"
 
     with app.test_client() as client:
+       
         data = {
             **form_data,
             "file": (BytesIO(b"fake image"), file_data["filename"]),

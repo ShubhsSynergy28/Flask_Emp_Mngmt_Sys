@@ -7,7 +7,7 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
 @pytest.mark.parametrize(
     "login_route, login_payload, form_data, file_upload, expected_status, expected_response",
     [
-        # ✅ Admin login + valid data + file upload
+        #  Admin login + valid data + file upload
         (
             "/login",
             {"email": "test@example.com", "password": "Securep@ss"},
@@ -25,7 +25,7 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
             {"message": "Employee updated successfully"}
         ),
 
-        # ✅ Employee login + valid data, no file upload
+        #  Employee login + valid data, no file upload
         (
             "/login-emp",
             {"phone_no": "1234567899", "password": "Securep@ss"},
@@ -43,7 +43,7 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
             {"message": "Employee updated successfully"}
         ),
 
-        # ❌ No login, expect 401
+        #  No login, expect 401
         (
             "",
             {},
@@ -61,7 +61,7 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
             {"error": "Unauthorized access. Please log in."}
         ),
 
-        # ❌ Invalid date format
+        #  Invalid date format
         (
             "/login",
             {"email": "test@example.com", "password": "Securep@ss"},
@@ -97,7 +97,7 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
             {'message': 'Employee updated successfully'}
         ),
 
-        # ❌ Invalid file extension
+        #  Invalid file extension
         (
             "/login",
             {"email": "test@example.com", "password": "Securep@ss"},

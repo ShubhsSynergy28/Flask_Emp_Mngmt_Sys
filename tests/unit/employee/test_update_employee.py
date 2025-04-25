@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from io import BytesIO
-from tests.fixtures import app
+from tests.unit.fixtures import app
 
 @pytest.mark.parametrize(
     "employeeid, employee_exists, form_data, file_data, hobbies_exist, education_exist, expected_status, expected_response",
