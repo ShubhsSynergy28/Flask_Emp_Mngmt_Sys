@@ -32,7 +32,6 @@ def handle_user_login():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/logout', methods=['POST'], endpoint='user_logout')
-@jwt_required()
 def handle_user_logout():
     try:
         return logout()
@@ -104,9 +103,8 @@ def handle_employee_login():
         print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
         
-
 @app.route('/logout-emp', methods=['POST'], endpoint='logout_employee')
-@jwt_required
+@jwt_required()
 def handle_employee_logout():
     try:
         return employee_logout()
@@ -123,7 +121,6 @@ def handle_create_user():
     
 
 @app.route('/refresh', methods=['POST'])
-@jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     user = get_user_by_id(current_user)
@@ -135,7 +132,6 @@ def refresh():
     return jsonify({"access_token": new_token})
 
 @app.route('/protected', methods=['GET'])
-@jwt_required
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200

@@ -23,23 +23,10 @@ CORS(
     resources={r"/*": {"origins": "http://localhost:5173"}},  # Your React URL
     supports_credentials=True
 )
-app.config['SESSION_COOKIE_HTTPONLY'] = True  # Allow JavaScript to access cookies
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Allow cross-origin cookies
-app.config['SESSION_COOKIE_SECURE'] = False
-app.config['SESSION_PERMANENT'] = True
-# app.config['SESSION_USE_SIGNER'] = True
-# app.config["SESSION_TYPE"]= "redis"
-# Set session expiration time (e.g., 30 minutes)
-# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
 app.config['JWT_SECRET_KEY'] =os.getenv('SECRET_KEY_FOR_JWT')
-app.config['JWT_TOKEN_LOCATION'] = ['headers']
-app.config['JWT_COOKIE_SECURE'] = True
-app.config["JWT_HEADER_NAME"] = "Authorization"
-app.config["JWT_HEADER_TYPE"] = "Bearer"
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=15)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=150000)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=30)
-app.config['JWT_BLOCKLIST_ENABLED'] = True
-app.config['JWT_BLOCKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 # app.config['JWT_COOKIE_SECURE'] = True
 # app.config['JWT_ACCESS_COOKIE_NAME'] = "access_token_cookie"  # Add this line
 # app.config['JWT_REFRESH_COOKIE_NAME'] = "refresh_token_cookie"  # Optional, if using refresh tokens
