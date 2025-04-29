@@ -10,13 +10,24 @@ def retrieve_validate_employee_data_for_update(func):
     @wraps(func)
     def wrapper(employeeid, *args, **kwargs):
         # Retrieve and sanitize form data
-        ename = request.form.get("name")
-        ephone = request.form.get("phone_no")
-        ebirth_date = request.form.get("birth_date")
-        egender = request.form.get("gender")
-        edescription = request.form.get("description")
-        hobbies = request.form.get("hobbies").split(",") if request.form.get("hobbies") else []
-        education = request.form.get("education").split(",") if request.form.get("education") else []
+        if request.is_json:
+            data = request.get_json()
+            ename = data.get("name")
+            ephone = data.get("phone_no")
+            ebirth_date = data.get("birth_date")
+            egender = data.get("gender")
+            edescription = data.get("description")
+            hobbies = data.get("hobbies", [])
+            education = data.get("education", [])
+        else:
+            # Retrieve and sanitize form data
+            ename = request.form.get("name")
+            ephone = request.form.get("phone_no")
+            ebirth_date = request.form.get("birth_date")
+            egender = request.form.get("gender")
+            edescription = request.form.get("description")
+            hobbies = request.form.get("hobbies").split(",") if request.form.get("hobbies") else []
+            education = request.form.get("education").split(",") if request.form.get("education") else []
 
         ename = escape(ename.strip()) if ename else None
         ephone = ephone.strip() if ephone else None

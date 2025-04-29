@@ -1,10 +1,13 @@
 from flask import jsonify, request, session
 from werkzeug.utils import secure_filename
 import os
+import redis
 import uuid
 from application import app
 from connectors.db import db
 from models.models import Employee
+from flask_jwt_extended import  get_jwt
+from utils.jwt_token_management import return_jwt_token,return_refresh_token
 
 from utils.allowed_extentions import ALLOWED_EXTENSIONS
 from utils.allowed_file import allowed_file
@@ -18,6 +21,7 @@ from models.employee_hobby import get_employee_hobby,add_employee_hobby,delete_e
 from models.education_model import get_education
 from models.hobby_model import get_hobby
 
+redis_client = redis.from_url(app.config['REDIS_URL'])
 
 def get_all_employees():
     employees = get_employee()
@@ -216,14 +220,21 @@ def delete_employee(employeeid):
     return jsonify({"message": f"Employee with ID {employeeid} deleted successfully"}), 200
 
 def employee_logout():
+    jti = get_jwt()['jti']
+    redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
     session.pop('employee_id', None)
     session.pop('employee_name', None)
     return jsonify({"message": "Employee logged out successfully"}), 200
 
 def employee_login():
-    phone_no = request.form.get("phone_no")
-    password = request.form.get("password")
-
+    if request.is_json:
+        data = request.get_json()
+        phone_no = data.get("phone_no")
+        password = data.get("password")
+    else:
+        phone_no = request.form.get("phone_no")
+        password = request.form.get("password")
+       
     # Validate input
     if not phone_no or not password:
         return jsonify({"error": "Phone number and password are required"}), 400
@@ -233,8 +244,29 @@ def employee_login():
     if not employee:
         return jsonify({"error": "Invalid phone number or password"}), 401
 
+    access_token = return_jwt_token(employee.phone_no,"employee")
+    refresh_token = return_refresh_token(employee.phone_no)
     # Create a session for the employee
     session['employee_id'] = employee.id
     session['employee_name'] = employee.name
-
-    return jsonify({"message": "Employee login successful", "employee": {"id": employee.id, "name": employee.name}}), 200
+    session['role'] = "employee"
+    response = jsonify({"message": "Employee login successful", "employee": {"id": employee.id, "name": employee.name}, 
+                    "access_token": access_token,
+                    "refresh_token": refresh_token})
+    response.set_cookie(
+            'access_token',  # Cookie name
+            value=access_token,  # Value of the cookie
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            secure=True,  # Set to True in production with HTTPS
+            httponly=True,  # Prevent JavaScript access
+            samesite='None'  # Adjust based on your cross-origin requirements
+        )
+    response.set_cookie(
+            'refresh_token',  # Cookie name
+            value=refresh_token,  # Value of the cookie
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            secure=True,  # Set to True in production with HTTPS
+            httponly=True,  # Prevent JavaScript access
+            samesite='None'  # Adjust based on your cross-origin requirements
+        )
+    return  response, 200

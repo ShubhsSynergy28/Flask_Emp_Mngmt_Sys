@@ -10,15 +10,27 @@ def retrieve_validate_employee_data_for_create(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         # Retrieve and sanitize form data
-        ename = request.form.get("name")
-        ephone = request.form.get("phone_no")
-        ebirth_date = request.form.get("birth_date")
-        egender = request.form.get("gender")
-        edescription = request.form.get("description")
-        password = request.form.get("password")
-        hobbies = request.form.get("hobbies")
-        education = request.form.get("education")
-
+        if request.is_json:
+            data = request.get_json()
+            ename = data.get("name")
+            ephone = data.get("phone_no")
+            ebirth_date = data.get("birth_date")
+            egender = data.get("gender")
+            edescription = data.get("description")
+            password = data.get("password")
+            hobbies = data.get("hobbies", [])
+            education = data.get("education", [])
+        else:
+            # Retrieve and sanitize form data
+            ename = request.form.get("name")
+            ephone = request.form.get("phone_no")
+            ebirth_date = request.form.get("birth_date")
+            egender = request.form.get("gender")
+            edescription = request.form.get("description")
+            password = request.form.get("password")
+            hobbies = request.form.get("hobbies").split(",") if request.form.get("hobbies") else []
+            education = request.form.get("education").split(",") if request.form.get("education") else []
+            
         ename = escape(ename.strip()) if ename else None
         ephone = ephone.strip() if ephone else None
         ebirth_date = ebirth_date.strip() if ebirth_date else None

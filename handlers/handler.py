@@ -1,12 +1,21 @@
 from flask import jsonify,session
 from application import app  
 import traceback
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 
 from logic.employee.employee import *
 from logic.user.user import *
 
 from utils.set_folder_upload_path import *
 from utils.is_admin_or_employee_authorization import admin_or_employee_authorized
+from utils.jwt_token_management import return_jwt_token
+
+from models.user_model import get_user_by_id
+from models.employee_model import check_phone
+
+# from flask_jwt_extended import jwt_refresh_token_required
+
 
 @app.route('/users', methods=['GET'])
 def handle_get_users():
@@ -22,7 +31,8 @@ def handle_user_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['POST'], endpoint='user_logout')
+@jwt_required()
 def handle_user_logout():
     try:
         return logout()
@@ -95,11 +105,11 @@ def handle_employee_login():
         return jsonify({"error": str(e)}), 500
         
 
-@app.route('/logout-emp', methods=['POST'])
+@app.route('/logout-emp', methods=['POST'], endpoint='logout_employee')
+@jwt_required
 def handle_employee_logout():
     try:
         return employee_logout()
-        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -111,3 +121,29 @@ def handle_create_user():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
+@app.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    current_user = get_jwt_identity()
+    user = get_user_by_id(current_user)
+    employee = check_phone(current_user)
+    if user:
+        new_token = return_jwt_token(current_user, "admin")
+    else:
+        new_token = return_jwt_token(current_user, "employee")
+    return jsonify({"access_token": new_token})
+
+@app.route('/protected', methods=['GET'])
+@jwt_required
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
+
+# @app.route('/token', methods=['POST'])
+# def create_jwt_token():
+#     try:
+#         return return_created_jwt()
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500

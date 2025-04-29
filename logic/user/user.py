@@ -1,8 +1,18 @@
 from flask import jsonify,session, request
 import bcrypt
 from connectors.db import db
+from flask_jwt_extended import  get_jwt
+import redis
+
+from application import app
 
 from models.user_model import *
+
+from utils.jwt_token_management import return_jwt_token,return_refresh_token
+# from flask_jwt_extended import set_access_cookies, set_refresh_cookies
+
+redis_client = redis.from_url(app.config['REDIS_URL'])
+
 
 def get_all_users():
     users = get_all_user()
@@ -22,8 +32,13 @@ def get_all_users():
 
 def login():
     # Retrieve form data
-    email = request.form.get('email')
-    password = request.form.get('password')  # Plain-text password from the user
+    if request.is_json:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+    else:
+        email = request.form.get('email')
+        password = request.form.get('password')  # Plain-text password from the user
 
     # Validate input
     if not email or not password:
@@ -33,16 +48,47 @@ def login():
     user = get_user_by_id(email)
 
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        access_token = return_jwt_token(user.email,"admin")
+        refresh_token = return_refresh_token(user.email)
+        
         # Store user details in the session
         session['user_id'] = user.id
         session['email'] = user.email
         session['username'] = user.username
-        return jsonify({"message": "Login successful", "user": {"username": user.username}}), 200
+        session['role'] =  "admin"
+
+        response = jsonify({
+            "message": "Login successful",
+            "user": {"username": user.username},
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }) 
+        response.set_cookie(
+            'access_token_cookie',  # Cookie name
+            value=access_token,  # Value of the cookie
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            secure=False,  # Set to True in production with HTTPS
+            httponly=True,  # Prevent JavaScript access
+            samesite='Lax'  # Adjust based on your cross-origin requirements
+        )
+        response.set_cookie(
+            'refresh_token_cookie',  # Cookie name
+            value=refresh_token,  # Value of the cookie
+            max_age=60 * 60 * 24 * 7,  # 7 days
+            secure=False,  # Set to True in production with HTTPS
+            httponly=True,  # Prevent JavaScript access
+            samesite='Lax'  # Adjust based on your cross-origin requirements
+        )
+          
+        return response, 200
     else:
         return jsonify({"error": "Invalid email or password"}), 401
 
 def logout():
     # Clear the session
+    # jti = get_jwt()['jti']
+    # print("JTI===============",jti)
+    # redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
     session.pop('user_id', None)
     session.pop('email', None)
     session.pop('username', None)

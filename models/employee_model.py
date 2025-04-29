@@ -16,6 +16,5 @@ def get_employee(employeeid=None):
     else:
         return Employee.query.all()
 
-
 def delete_emp(employee):
     db.session.delete(employee)
