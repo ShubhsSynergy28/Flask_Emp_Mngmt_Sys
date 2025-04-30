@@ -21,7 +21,7 @@ from models.employee_hobby import get_employee_hobby,add_employee_hobby,delete_e
 from models.education_model import get_education
 from models.hobby_model import get_hobby
 
-redis_client = redis.from_url(app.config['REDIS_URL'])
+# redis_client = redis.from_url(app.config['REDIS_URL'])
 
 def get_all_employees():
     employees = get_employee()
@@ -220,8 +220,8 @@ def delete_employee(employeeid):
     return jsonify({"message": f"Employee with ID {employeeid} deleted successfully"}), 200
 
 def employee_logout():
-    jti = get_jwt()['jti']
-    redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
+    # jti = get_jwt()['jti']
+    # redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
     session.pop('employee_id', None)
     session.pop('employee_name', None)
     return jsonify({"message": "Employee logged out successfully"}), 200

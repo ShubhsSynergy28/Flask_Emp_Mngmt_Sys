@@ -22,6 +22,11 @@ class Hobby(db.Model):
     id = db.Column('Hid', db.Integer, primary_key=True)
     name = db.Column('Hname', db.String(100), unique=True, nullable=False)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 # Employee-Hobby association model
 class EmployeeHobby(db.Model):
     __tablename__ = 'employee_hobbies'
@@ -40,6 +45,12 @@ class Education(db.Model):
     __tablename__ = 'educations'
     id = db.Column('Eduid', db.Integer, primary_key=True)
     name = db.Column('Eduname', db.String(100), unique=True, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+         }
 
 # Employee-Education association model
 class EmployeeEducation(db.Model):

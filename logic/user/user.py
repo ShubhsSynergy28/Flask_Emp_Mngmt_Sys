@@ -8,10 +8,10 @@ from application import app
 
 from models.user_model import *
 
-from utils.jwt_token_management import return_jwt_token,return_refresh_token
+from utils.jwt_token_management import  return_jwt_token, return_refresh_token
 # from flask_jwt_extended import set_access_cookies, set_refresh_cookies
 
-redis_client = redis.from_url(app.config['REDIS_URL'])
+# redis_client = redis.from_url(app.config['REDIS_URL'])
 
 
 def get_all_users():
@@ -63,36 +63,38 @@ def login():
             "access_token": access_token,
             "refresh_token": refresh_token
         }) 
-        response.set_cookie(
-            'access_token_cookie',  # Cookie name
-            value=access_token,  # Value of the cookie
-            max_age=60 * 60 * 24 * 7,  # 7 days
-            secure=False,  # Set to True in production with HTTPS
-            httponly=True,  # Prevent JavaScript access
-            samesite='Lax'  # Adjust based on your cross-origin requirements
-        )
-        response.set_cookie(
-            'refresh_token_cookie',  # Cookie name
-            value=refresh_token,  # Value of the cookie
-            max_age=60 * 60 * 24 * 7,  # 7 days
-            secure=False,  # Set to True in production with HTTPS
-            httponly=True,  # Prevent JavaScript access
-            samesite='Lax'  # Adjust based on your cross-origin requirements
-        )
+        # response.set_cookie(
+        #     'access_token_cookie',  # Cookie name
+        #     value=access_token,  # Value of the cookie
+        #     max_age=60 * 60 * 24 * 7,  # 7 days
+        #     secure=False,  # Set to True in production with HTTPS
+        #     httponly=True,  # Prevent JavaScript access
+        #     samesite='Lax'  # Adjust based on your cross-origin requirements
+        # )
+        # response.set_cookie(
+        #     'refresh_token_cookie',  # Cookie name
+        #     value=refresh_token,  # Value of the cookie
+        #     max_age=60 * 60 * 24 * 7,  # 7 days
+        #     secure=False,  # Set to True in production with HTTPS
+        #     httponly=True,  # Prevent JavaScript access
+        #     samesite='Lax'  # Adjust based on your cross-origin requirements
+        # )
           
         return response, 200
     else:
         return jsonify({"error": "Invalid email or password"}), 401
 
 def logout():
-    # Clear the session
-    # jti = get_jwt()['jti']
-    # print("JTI===============",jti)
-    # redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
-    session.pop('user_id', None)
-    session.pop('email', None)
-    session.pop('username', None)
-    return jsonify({"message": "Logout successful"}), 200
+    try:
+        # jti = get_jwt()['jti']
+        # redis_client.set(jti, 'true', ex=app.config['JWT_ACCESS_TOKEN_EXPIRES'])
+        session.pop('user_id', None)
+        session.pop('email', None)
+        session.pop('username', None)
+        return jsonify({"message": "Logout successful"}), 200
+    except Exception as e:
+        print(f"Error during logout: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
 
 def create_user():
     # Retrieve and clean form data

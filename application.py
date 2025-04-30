@@ -30,7 +30,8 @@ app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=30)
 # app.config['JWT_COOKIE_SECURE'] = True
 # app.config['JWT_ACCESS_COOKIE_NAME'] = "access_token_cookie"  # Add this line
 # app.config['JWT_REFRESH_COOKIE_NAME'] = "refresh_token_cookie"  # Optional, if using refresh tokens
-app.config['REDIS_URL'] = 'redis://redis:6379/0'
+# app.config['REDIS_URL'] = 'redis://redis:6379/0'
+# app.config['REDIS_URL'] = 'redis://redis:6379/0'
 
 
 

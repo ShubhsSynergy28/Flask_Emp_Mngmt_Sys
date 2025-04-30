@@ -6,6 +6,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from logic.employee.employee import *
 from logic.user.user import *
+from logic.educationHobby.fetch_education_hobby import *
 
 from utils.set_folder_upload_path import *
 from utils.is_admin_or_employee_authorization import admin_or_employee_authorized
@@ -13,6 +14,8 @@ from utils.jwt_token_management import return_jwt_token
 
 from models.user_model import get_user_by_id
 from models.employee_model import check_phone
+# from models.education_model import get_all_educations
+# from models.hobby_model import get_all_hobby
 
 # from flask_jwt_extended import jwt_refresh_token_required
 
@@ -32,6 +35,7 @@ def handle_user_login():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/logout', methods=['POST'], endpoint='user_logout')
+# @jwt_required()
 def handle_user_logout():
     try:
         return logout()
@@ -51,7 +55,7 @@ def status():
     
 
 @app.route('/createEmployee', methods=['POST'])
-@admin_or_employee_authorized
+# @admin_or_employee_authorized
 def handle_create_employee():
     try:
         return create_employee()
@@ -59,7 +63,7 @@ def handle_create_employee():
         return jsonify({"error": str(e)}), 500
   
 @app.route('/employees', methods=['GET'])
-@admin_or_employee_authorized
+# @admin_or_employee_authorized
 def handle_get_employees():
     try:
         return get_all_employees()
@@ -67,7 +71,7 @@ def handle_get_employees():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/employee/<int:employeeid>', methods=['GET'])
-@admin_or_employee_authorized
+# @admin_or_employee_authorized
 def handle_get_employee_by_id(employeeid):
     try:
         return get_employee_by_id(employeeid)
@@ -77,7 +81,7 @@ def handle_get_employee_by_id(employeeid):
 
 
 @app.route('/update-employee/<int:employeeid>', methods=['PUT'])
-@admin_or_employee_authorized
+# @admin_or_employee_authorized
 def handle_update_employee(employeeid):
     try:
         return update_employee(employeeid)
@@ -87,7 +91,7 @@ def handle_update_employee(employeeid):
     
     
 @app.route('/delete-employee/<int:employeeid>', methods=['DELETE'])
-@admin_or_employee_authorized
+# @admin_or_employee_authorized
 def handle_delete_employee(employeeid):
     try:
         return delete_employee(employeeid)
@@ -104,7 +108,7 @@ def handle_employee_login():
         return jsonify({"error": str(e)}), 500
         
 @app.route('/logout-emp', methods=['POST'], endpoint='logout_employee')
-@jwt_required()
+# @jwt_required()
 def handle_employee_logout():
     try:
         return employee_logout()
@@ -116,6 +120,21 @@ def handle_employee_logout():
 def handle_create_user():
     try:
         return create_user()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/get-all-available-educations', methods=['GET'])
+def get_education():
+    print("hi")
+    try:
+        return get_all_education()  # Return the result as JSON
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get-all-available-hobbies', methods=['GET'])
+def get_hobbies():
+    try:
+        return get_all_hobby() # Return the result as JSON
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -136,6 +155,11 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
+
+
+
+
+        
 
 # @app.route('/token', methods=['POST'])
 # def create_jwt_token():
