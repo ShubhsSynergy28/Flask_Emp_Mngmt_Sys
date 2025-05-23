@@ -1,6 +1,7 @@
 from flask import jsonify, request, session
 from werkzeug.utils import secure_filename
 import os
+import html
 import redis
 import uuid
 from application import app
@@ -229,11 +230,11 @@ def employee_logout():
 def employee_login():
     if request.is_json:
         data = request.get_json()
-        phone_no = data.get("phone_no")
-        password = data.get("password")
+        phone_no = html.escape((data.get("phone_no")).strip())
+        password = html.escape((data.get("password")).strip())
     else:
-        phone_no = request.form.get("phone_no")
-        password = request.form.get("password")
+        phone_no = html.escape((request.form.get("phone_no")).strip())
+        password = html.escape((request.form.get("password")).strip())
        
     # Validate input
     if not phone_no or not password:

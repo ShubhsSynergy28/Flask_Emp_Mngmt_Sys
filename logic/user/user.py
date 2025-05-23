@@ -3,6 +3,7 @@ import bcrypt
 from connectors.db import db
 from flask_jwt_extended import  get_jwt
 import redis
+import html
 
 from application import app
 
@@ -34,11 +35,11 @@ def login():
     # Retrieve form data
     if request.is_json:
         data = request.get_json()
-        email = data.get('email')
-        password = data.get('password')
+        email = html.escape((data.get('email')).strip())
+        password = html.escape((data.get('password')).strip())
     else:
-        email = request.form.get('email')
-        password = request.form.get('password')  # Plain-text password from the user
+        email = html.escape((request.form.get('email')).strip())
+        password = html.escape((request.form.get('password')).strip())  # Plain-text password from the user
 
     # Validate input
     if not email or not password:
@@ -97,10 +98,17 @@ def logout():
         return jsonify({"error": "Internal Server Error"}), 500
 
 def create_user():
-    # Retrieve and clean form data
-    username = request.form.get('username', '').strip()
-    email = request.form.get('email', '').strip()
-    password = request.form.get('password', '').strip()  # Plain-text password from the user
+    # Check if the request is JSON or form data
+    if request.is_json:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        email = data.get('email', '').strip()
+        password = data.get('password', '').strip()
+    else:
+        # Form data handling
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
 
     # Validate input
     if not username or not email or not password:

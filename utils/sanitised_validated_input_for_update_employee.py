@@ -17,8 +17,8 @@ def retrieve_validate_employee_data_for_update(func):
             ebirth_date = data.get("birth_date")
             egender = data.get("gender")
             edescription = data.get("description")
-            hobbies = data.get("hobbies", [])
-            education = data.get("education", [])
+            hobbies = data.get("hobbies").split(",") if data.get("hobbies") else []
+            education = data.get("education").split(",") if data.get("education") else []
         else:
             # Retrieve and sanitize form data
             ename = request.form.get("name")

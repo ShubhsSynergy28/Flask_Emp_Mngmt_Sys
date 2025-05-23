@@ -28,8 +28,8 @@ def retrieve_validate_employee_data_for_create(func):
             egender = request.form.get("gender")
             edescription = request.form.get("description")
             password = request.form.get("password")
-            hobbies = request.form.get("hobbies").split(",") if request.form.get("hobbies") else []
-            education = request.form.get("education").split(",") if request.form.get("education") else []
+            hobbies = request.form.get("hobbies", [])
+            education = request.form.get("education", [])
             
         ename = escape(ename.strip()) if ename else None
         ephone = ephone.strip() if ephone else None
