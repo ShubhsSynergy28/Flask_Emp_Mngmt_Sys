@@ -18,8 +18,13 @@ from tests.unit.fixtures import app
     # Valid email & wrong password
     ('user@example.com', 'Securepassword@12', 'wrong@password', 401, {"error": "Invalid email or password"}),
 ])
+@patch("logic.user.user.return_refresh_token", return_value="mock-refresh-token")
+@patch("logic.user.user.return_jwt_token", return_value="mock-access-token")
 @patch('logic.user.user.get_user_by_id')
-def test_login_function_direct(mock_get_user_by_id, test_email, test_password, input_password, expected_status, expected_response,app):
+def test_login_function_direct(
+    mock_get_user_by_id, mock_jwt_token, mock_refresh_token,
+    test_email, test_password, input_password, expected_status, expected_response, app
+):
     with app.test_request_context('/login', method='POST', data={'email': test_email, 'password': input_password}):
         # Only return a user object if email is provided
         if test_email:
@@ -37,8 +42,15 @@ def test_login_function_direct(mock_get_user_by_id, test_email, test_password, i
         response, status_code = login()
 
         assert status_code == expected_status
-        assert response.get_json() == expected_response
-
+        data = response.get_json()
+        # For successful login, check tokens as well
+        if expected_status == 200:
+            assert data["message"] == expected_response["message"]
+            assert data["user"] == expected_response["user"]
+            assert data["access_token"] == "mock-access-token"
+            assert data["refresh_token"] == "mock-refresh-token"
+        else:
+            assert data == expected_response
 
 
 @pytest.mark.parametrize("session_data", [

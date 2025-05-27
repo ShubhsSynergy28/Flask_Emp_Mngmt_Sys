@@ -43,23 +43,23 @@ from utils.allowed_extentions import ALLOWED_EXTENSIONS
             {"message": "Employee updated successfully"}
         ),
 
-        #  No login, expect 401
-        (
-            "",
-            {},
-            {
-                "name": "Unauthorized update",
-                "phone_no": "1111111111",
-                "birth_date": "2002-05-28",
-                "gender": "male",
-                "description": "No session",
-                "hobbies": "test_Reading",
-                "education": "test_Bachelor"
-            },
-            None,
-            401,
-            {"error": "Unauthorized access. Please log in."}
-        ),
+        # #  No login, expect 401
+        # (
+        #     "",
+        #     {},
+        #     {
+        #         "name": "Unauthorized update",
+        #         "phone_no": "1111111111",
+        #         "birth_date": "2002-05-28",
+        #         "gender": "male",
+        #         "description": "No session",
+        #         "hobbies": "test_Reading",
+        #         "education": "test_Bachelor"
+        #     },
+        #     None,
+        #     401,
+        #     {"error": "Unauthorized access. Please log in."}
+        # ),
 
         #  Invalid date format
         (

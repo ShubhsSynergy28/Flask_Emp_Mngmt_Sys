@@ -2,7 +2,7 @@ import pytest
 from flask import Flask
 from logic.employee.employee import employee_login, employee_logout, create_employee, update_employee
 from connectors.db import db
-
+from flask_jwt_extended import JWTManager
 
 @pytest.fixture
 def app():
@@ -14,6 +14,7 @@ def app():
     print("=========================", app.config['UPLOAD_FOLDER'])
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    JWTManager(app)
     db.init_app(app)
 
     @app.route("/employee/login", methods=["POST"])

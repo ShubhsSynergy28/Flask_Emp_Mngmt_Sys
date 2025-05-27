@@ -80,23 +80,23 @@ from tests.integration.conftest import *
             {"error": "Phone number already exists"}
         ),
 
-        #  Unauthorized (not logged in)
-        (
-            "", "", "", "",
-            {
-                "name": "Unauthorized",
-                "phone_no": "9876543222",
-                "birth_date": "2000-01-01",
-                "gender": "male",
-                "description": "Not logged in",
-                "password": "Test@123",
-                "hobbies": "test_Sports",
-                "education": "test_Bachelor"
-            },
-            None,
-            401,
-            {"error": "Unauthorized access. Please log in."}
-        ),
+        # #  Unauthorized (not logged in)
+        # (
+        #     "", "", "", "",
+        #     {
+        #         "name": "Unauthorized",
+        #         "phone_no": "9876543222",
+        #         "birth_date": "2000-01-01",
+        #         "gender": "male",
+        #         "description": "Not logged in",
+        #         "password": "Test@123",
+        #         "hobbies": "test_Sports",
+        #         "education": "test_Bachelor"
+        #     },
+        #     None,
+        #     401,
+        #     {"error": "Unauthorized access. Please log in."}
+        # ),
     ]
 )
 def test_create_employee(

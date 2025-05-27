@@ -12,8 +12,10 @@ from tests.unit.fixtures import app
     ("1234567890", "", 400, {"error": "Phone number and password are required"}),  # Missing password
     ("1234567890", "wrongpass", 401, {"error": "Invalid phone number or password"}),  # Invalid creds
 ])
+@patch("logic.employee.employee.return_refresh_token", return_value="mock-refresh-token")
+@patch("logic.employee.employee.return_jwt_token", return_value="mock-access-token")
 @patch("logic.employee.employee.check_employee_credentials")
-def test_employee_login(mock_check_credentials, app, phone_no, password, expected_status, expected_response):
+def test_employee_login(mock_check_credentials, mock_jwt_token, mock_refresh_token, app, phone_no, password, expected_status, expected_response):
     # Setup mock
     employee_mock = MagicMock()
     employee_mock.id = 1
@@ -39,10 +41,12 @@ def test_employee_login(mock_check_credentials, app, phone_no, password, expecte
             assert json_data[key] == value
 
         if expected_status == 200:
+            # Check tokens are present and correct (mocked)
+            assert json_data["access_token"] == "mock-access-token"
+            assert json_data["refresh_token"] == "mock-refresh-token"
             with client.session_transaction() as sess:
                 assert sess['employee_id'] == employee_mock.id
                 assert sess['employee_name'] == employee_mock.name
-
 
 def test_employee_logout(app):
     with app.test_client() as client:
