@@ -18,7 +18,7 @@ from models.employee_model import check_phone
 # from models.hobby_model import get_all_hobby
 
 # from flask_jwt_extended import jwt_refresh_token_required
-
+from connectors.db import neo4j
 
 @app.route('/users', methods=['GET'])
 def handle_get_users():
@@ -154,6 +154,10 @@ def refresh():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+@app.teardown_appcontext
+def close_drivers(error=None):
+    neo4j.close()
 
 
 

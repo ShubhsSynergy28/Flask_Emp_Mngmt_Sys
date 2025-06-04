@@ -6,7 +6,7 @@ class Employee(db.Model):
     __tablename__ = 'employees'
     id = db.Column('Eid', db.Integer, primary_key=True)
     name = db.Column('EName', db.String(100), nullable=False)
-    phone_no = db.Column('Ephone', db.String(10), unique=True, nullable=False)
+    phone_no = db.Column('Ephone', db.String(20), unique=True, nullable=False)
     birth_date = db.Column('Ebirth_date', db.Date, nullable=False)
     gender = db.Column('Egender', db.String(10), nullable=False)
     description = db.Column('Edescription', db.Text, nullable=False)

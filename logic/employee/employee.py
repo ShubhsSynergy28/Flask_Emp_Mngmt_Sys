@@ -16,7 +16,7 @@ from utils.sanitised_validated_input_for_create_employee import retrieve_validat
 from utils.sanitised_validated_input_for_update_employee import retrieve_validate_employee_data_for_update
 from utils.check_employee_credentials import check_employee_credentials
 
-from models.employee_model import add_employee,get_employee,delete_emp
+from models.employee_model import add_employee,get_employee,delete_emp,update_emp
 from models.employee_education import get_employee_education,add_employee_education,delete_employee_education
 from models.employee_hobby import get_employee_hobby,add_employee_hobby,delete_employee_hobby
 from models.education_model import get_education
@@ -32,6 +32,17 @@ def get_all_employees():
     # Format the response
     result = []
     for employee in employees:
+        # result.append({
+        #     "id": employee.id,
+        #     "name": employee.name,
+        #     "phone_no": employee.phone_no,
+        #     "birth_date": str(employee.birth_date),
+        #     "gender": employee.gender,
+        #     "description": employee.description,
+        #     "file_path": employee.file_path,
+        #     "hobbies": [hobby.hobby.name for hobby in employee.hobbies],  # Get hobby names
+        #     "education": [edu.education.name for edu in employee.educations]  # Get education names
+        # }) #xampp
         result.append({
             "id": employee.id,
             "name": employee.name,
@@ -40,9 +51,9 @@ def get_all_employees():
             "gender": employee.gender,
             "description": employee.description,
             "file_path": employee.file_path,
-            "hobbies": [hobby.hobby.name for hobby in employee.hobbies],  # Get hobby names
-            "education": [edu.education.name for edu in employee.educations]  # Get education names
-        })
+            "hobbies": employee.hobbies,        # Already a list of strings
+            "education": employee.educations,  # Already a list of strings
+        })#SnowFlaKE
 
     return jsonify(result), 200
 
@@ -52,6 +63,18 @@ def get_employee_by_id(employeeid):
         return jsonify({"error": "Employee not found"}), 404
 
     # Format the response
+    # result = {
+    #     "id": employee.id,
+    #     "name": employee.name,
+    #     "phone_no": employee.phone_no,
+    #     "birth_date": str(employee.birth_date),
+    #     "gender": employee.gender,
+    #     "description": employee.description,
+    #     "file_path": employee.file_path,
+    #     "hobbies": [hobby.hobby.name for hobby in employee.hobbies],  # Get hobby names
+    #     "education": [edu.education.name for edu in employee.educations]  # Get education names
+    # } #xampp
+
     result = {
         "id": employee.id,
         "name": employee.name,
@@ -60,9 +83,9 @@ def get_employee_by_id(employeeid):
         "gender": employee.gender,
         "description": employee.description,
         "file_path": employee.file_path,
-        "hobbies": [hobby.hobby.name for hobby in employee.hobbies],  # Get hobby names
-        "education": [edu.education.name for edu in employee.educations]  # Get education names
-    }
+        "hobbies": employee.hobbies,  # Get hobby names
+        "education": employee.educations  # Get education names
+    } #SnowFlaKE
 
     return jsonify(result), 200
 
@@ -164,7 +187,7 @@ def update_employee(employeeid, ename, ephone, formatted_birth_date, egender, ed
             
             file.save(file_path)
             employee.file_path = file_path
-
+    update_emp(employeeid, ename, ephone, formatted_birth_date, egender, edescription,employee.file_path)       
     # Use no_autoflush to prevent premature flushing
     with db.session.no_autoflush:
         # Update hobbies
@@ -195,7 +218,7 @@ def update_employee(employeeid, ename, ephone, formatted_birth_date, egender, ed
 def delete_employee(employeeid):
     # Fetch the employee by ID
     employee = get_employee(employeeid)
-    print(employee)
+    # print(employee)
     if not employee:
         return jsonify({"error": "Employee not found"}), 404
     
@@ -212,7 +235,8 @@ def delete_employee(employeeid):
         delete_employee_education(employeeid)
         delete_employee_hobby(employeeid)
         # Delete the employee
-        delete_emp(employee)
+        # delete_emp(employee)#xampp
+        delete_emp(employeeid)
         # db.session.delete(employee)
 
     # Commit the transaction
